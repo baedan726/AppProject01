@@ -16,12 +16,18 @@
 		</license>
 	</licenses>
 
-	<!-- eGovFramework Web Parent 설정 -->
+	<!-- eGovFramework Web Parent 설정 (Spring 6.2 기반) -->
 	<parent>
 		<groupId>org.egovframe.web</groupId>
 		<artifactId>egovframe-web-config-parent</artifactId>
 		<version>5.0.0</version>
 	</parent>
+
+	<!-- ★★★ 버전 변수 정의 (한 곳에서 관리) ★★★ -->
+	<properties>
+		<spring.version>6.2.0</spring.version>
+		<spring.security.version>6.3.4</spring.security.version>
+	</properties>
 
 	<repositories>
 		<repository>
@@ -51,7 +57,43 @@
 		</repository>
 	</repositories>
 
+	<!-- ★★★ BOM으로 Spring/Spring Security 버전 강제 통일 ★★★ -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Framework BOM: spring-core, spring-beans, spring-context, spring-web, spring-webmvc, spring-jdbc 등 모두 동일 버전으로 통일 -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- Spring Security BOM: spring-security-* 모두 동일 버전으로 통일 -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>${spring.security.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
+		<!-- log4jdbc -->
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+			<version>1.16</version>
+		</dependency>
+
+		<!-- MySQL Driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
+
 		<!-- 표준프레임워크 실행환경 -->
 		<dependency>
 			<groupId>org.egovframe.rte</groupId>
@@ -80,23 +122,20 @@
 			<artifactId>egovframe-rte-ptl-reactive</artifactId>
 		</dependency>
 
-		<!-- Jakarta -->
+		<!-- Jakarta Servlet/JSP/JSTL -->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
-		<!-- JSP 구문을 지원하기 위한 표준 사양 -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp</groupId>
 			<artifactId>jakarta.servlet.jsp-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- JSTL 태그의 표준 사양 -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 		</dependency>
-		<!-- JSTL 구현체 -->
 		<dependency>
 			<groupId>org.glassfish.web</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
@@ -112,6 +151,7 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
+		<!-- 기타 -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -128,6 +168,8 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.json</artifactId>
 		</dependency>
+
+		<!-- Test -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -149,21 +191,18 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Spring Security (eGovFrame 5.0의 Spring 6.1.x와 호환되는 버전) -->
+		<!-- ★★★ Spring Security: 버전 명시 제거 (BOM이 6.3.4로 통일) ★★★ -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>6.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>6.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-			<version>6.1.5</version>
 		</dependency>
 	</dependencies>
 
@@ -186,12 +225,10 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- PMD manven plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 			</plugin>
-			<!-- EMMA -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -207,7 +244,6 @@
 					</includes>
 				</configuration>
 			</plugin>
-			<!--  JavaDoc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
