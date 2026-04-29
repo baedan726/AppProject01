@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class inquiryDTO {
+public class InquiryDTO {
 	private Long inquiryId;
     private Long memberId;
     private String title;
@@ -43,7 +43,7 @@ public class inquiryDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public inquiryDTO(Long inquiryId, Long memberId, String title, String content, String answer, String status) {
+	public InquiryDTO(Long inquiryId, Long memberId, String title, String content, String answer, String status) {
 		super();
 		this.inquiryId = inquiryId;
 		this.memberId = memberId;

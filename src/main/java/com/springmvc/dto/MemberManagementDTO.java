@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class memberManagementDTO {
+public class MemberManagementDTO {
 	private Long memberId;
     private String loginId;
     private String name;
@@ -57,7 +57,7 @@ public class memberManagementDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public memberManagementDTO(Long memberId, String loginId, String name, String nickname, String email, String phone,
+	public MemberManagementDTO(Long memberId, String loginId, String name, String nickname, String email, String phone,
 			String role, String status) {
 		super();
 		this.memberId = memberId;
@@ -68,6 +68,10 @@ public class memberManagementDTO {
 		this.phone = phone;
 		this.role = role;
 		this.status = status;
+	}
+	public MemberManagementDTO() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
     
 }

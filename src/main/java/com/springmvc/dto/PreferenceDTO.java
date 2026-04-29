@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class preferenceDTO {
+public class PreferenceDTO {
 	private Long preferenceId;
     private Long memberId;
     private String favoriteCategory;
@@ -50,7 +50,7 @@ public class preferenceDTO {
 	public void setMoodPreference(String moodPreference) {
 		this.moodPreference = moodPreference;
 	}
-	public preferenceDTO(Long preferenceId, Long memberId, String favoriteCategory, String spicyLevel,
+	public PreferenceDTO(Long preferenceId, Long memberId, String favoriteCategory, String spicyLevel,
 			String pricePreference, String situationPreference, String moodPreference) {
 		super();
 		this.preferenceId = preferenceId;

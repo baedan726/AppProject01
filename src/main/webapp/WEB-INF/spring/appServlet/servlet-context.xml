@@ -63,7 +63,7 @@
          allowPublicKeyRetrieval=true → 공개키 검색 허용 (MySQL 8 인증)
          useSSL=false → SSL 비활성화 (개발용)
          serverTimezone=Asia/Seoul → 시간대 한국  -->
-<beans:property name="url" value="jdbc:mysql://database.c5s8mqcqwxjg.ap-northeast-2.rds.amazonaws.com:3306/app?allowPublicKeyRetrieval=true"/>
+<beans:property name="url" value="jdbc:mysql://database.c5s8mqcqwxjg.ap-northeast-2.rds.amazonaws.com:3306/Eat?allowPublicKeyRetrieval=true"/>
 <beans:property name="username" value="admin"/>
 <beans:property name="password" value="eks3292929!"/>
 </beans:bean>

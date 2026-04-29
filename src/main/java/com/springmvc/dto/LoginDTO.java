@@ -1,13 +1,13 @@
 package com.springmvc.dto;
 
 public class LoginDTO {
-	private String Id;
+	private String id;
 	private String pw;
 	public String getId() {
-		return Id;
+		return id;
 	}
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getPw() {
 		return pw;
@@ -17,8 +17,12 @@ public class LoginDTO {
 	}
 	public LoginDTO(String id, String pw) {
 		super();
-		Id = id;
+		this.id = id;
 		this.pw = pw;
+	}
+	public LoginDTO() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class alertSettingDTO {
+public class AlertSettingDTO {
 	private Long memberId;
     private boolean pushAlert;
     private boolean emailAlert;
@@ -22,7 +22,7 @@ public class alertSettingDTO {
 	public void setEmailAlert(boolean emailAlert) {
 		this.emailAlert = emailAlert;
 	}
-	public alertSettingDTO(Long memberId, boolean pushAlert, boolean emailAlert) {
+	public AlertSettingDTO(Long memberId, boolean pushAlert, boolean emailAlert) {
 		super();
 		this.memberId = memberId;
 		this.pushAlert = pushAlert;
