@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class findIdDTO {
+public class FindIdDTO {
 	private String name;
 	private String email;
 	public String getName() {
@@ -15,7 +15,7 @@ public class findIdDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public findIdDTO(String name, String email) {
+	public FindIdDTO(String name, String email) {
 		super();
 		this.name = name;
 		this.email = email;

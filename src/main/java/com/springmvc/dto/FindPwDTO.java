@@ -1,6 +1,6 @@
 package com.springmvc.dto;
 
-public class findPwDTO {
+public class FindPwDTO {
 	private String Id;
 	private String email;
 	public String getId() {
@@ -15,7 +15,7 @@ public class findPwDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public findPwDTO(String id, String email) {
+	public FindPwDTO(String id, String email) {
 		super();
 		Id = id;
 		this.email = email;
