@@ -25,7 +25,6 @@ public class RestaurantController {
         List<RestaurantDTO> restaurantList = restaurantService.getRestaurantList();
 
         model.addAttribute("restaurantList", restaurantList);
-
         return "restaurant/list";
     }
 
