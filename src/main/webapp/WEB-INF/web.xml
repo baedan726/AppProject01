@@ -26,7 +26,7 @@
 		
 		<multipart-config>
 			<location>C:\upload</location>
-			<max-file-size>100000</max-file-size>
+			<max-file-size>10000000</max-file-size>
 			<max-request-size>20000000</max-request-size>
 		</multipart-config>
 		
