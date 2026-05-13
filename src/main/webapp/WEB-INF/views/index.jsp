@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
@@ -211,6 +212,14 @@ a {
 	background: rgba(255, 255, 255, 0.75);
 	border: 1px solid rgba(255, 255, 255, 0.9);
 	box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+	display: block;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.stat-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 18px 38px rgba(255, 101, 0, 0.14);
 }
 
 .stat-card strong {
@@ -224,6 +233,7 @@ a {
 	font-size: 12px;
 	color: #6b7280;
 	font-weight: 800;
+	line-height: 1.5;
 }
 
 .hero-panel {
@@ -308,6 +318,14 @@ a {
 	overflow: hidden;
 	border: 1px solid rgba(255, 255, 255, 0.85);
 	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+	display: block;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.map-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 18px 38px rgba(255, 101, 0, 0.12);
 }
 
 .map-line {
@@ -583,16 +601,25 @@ a {
 	background: #ffffff;
 	border: 1px solid #eef2f7;
 	box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+	transition: 0.2s;
+}
+
+.restaurant-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 18px 38px rgba(17, 24, 39, 0.11);
 }
 
 .restaurant-img {
 	height: 130px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 46px;
-	background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55),
-		transparent 28%), linear-gradient(135deg, #fff0dc, #ffd0a3);
+	overflow: hidden;
+	background: #f3f4f6;
+}
+
+.restaurant-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 }
 
 .restaurant-body {
@@ -603,6 +630,9 @@ a {
 	font-size: 15px;
 	font-weight: 950;
 	margin-bottom: 7px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .restaurant-info {
@@ -610,6 +640,7 @@ a {
 	color: #6b7280;
 	line-height: 1.6;
 	font-weight: 700;
+	min-height: 38px;
 }
 
 .restaurant-rating {
@@ -617,6 +648,17 @@ a {
 	color: #ff6500;
 	font-size: 12px;
 	font-weight: 950;
+}
+
+.empty-recent {
+	padding: 34px 20px;
+	text-align: center;
+	background: #ffffff;
+	border: 1px dashed #ffd0a3;
+	border-radius: 24px;
+	color: #6b7280;
+	font-size: 14px;
+	font-weight: 800;
 }
 
 .footer {
@@ -656,6 +698,18 @@ a {
 
 .footer-links a:hover {
 	color: white;
+}
+
+.user-name {
+	display: inline-flex;
+	align-items: center;
+	padding: 0 12px;
+	font-size: 14px;
+	font-weight: 900;
+	color: #111827;
+	background: rgba(255, 255, 255, 0.78);
+	border: 1px solid #e5e7eb;
+	border-radius: 999px;
 }
 
 @media ( max-width : 980px) {
@@ -706,56 +760,45 @@ a {
 		flex-direction: column;
 	}
 }
-
-.user-name {
-	display: inline-flex;
-	align-items: center;
-	padding: 0 12px;
-	font-size: 14px;
-	font-weight: 900;
-	color: #111827;
-	background: rgba(255, 255, 255, 0.78);
-	border: 1px solid #e5e7eb;
-	border-radius: 999px;
-}
 </style>
 </head>
 
 <body>
 
 	<header class="header">
-		<a href="${contextPath}/" class="logo"> PickEat <span
-			class="logo-icon"></span>
+		<a href="${contextPath}/" class="logo">
+			PickEat <span class="logo-icon"></span>
 		</a>
 
 		<nav class="nav">
-			<a href="${contextPath}/">홈</a> <a href="${contextPath}/recommend">추천</a>
-			<a href="${contextPath}/restaurants">맛집 리스트</a> <a
-				href="${contextPath}/review">리뷰</a> <a href="${contextPath}/mypage">마이페이지</a>
+			<a href="${contextPath}/">홈</a>
+			<a href="${contextPath}/recommend">추천</a>
+			<a href="${contextPath}/restaurants">맛집 리스트</a>
+			<a href="${contextPath}/bookmark/list">즐겨찾기</a>
+			<a href="${contextPath}/review">리뷰</a>
+			<a href="${contextPath}/mypage">마이페이지</a>
 		</nav>
 
 		<div class="header-actions">
-
 			<c:choose>
 				<c:when test="${not empty sessionScope.loginMember}">
-					<span class="user-name"> ${sessionScope.loginMember.name}님 </span>
+					<span class="user-name">${sessionScope.loginMember.name}님</span>
 
 					<a href="${contextPath}/member/mypage"
-						class="header-btn header-login"> 마이페이지 </a>
+						class="header-btn header-login">마이페이지</a>
 
 					<a href="${contextPath}/member/logout"
-						class="header-btn header-join"> 로그아웃 </a>
+						class="header-btn header-join">로그아웃</a>
 				</c:when>
 
 				<c:otherwise>
 					<a href="${contextPath}/member/login"
-						class="header-btn header-login"> 로그인 </a>
+						class="header-btn header-login">로그인</a>
 
 					<a href="${contextPath}/member/signup"
-						class="header-btn header-join"> 회원가입 </a>
+						class="header-btn header-join">회원가입</a>
 				</c:otherwise>
 			</c:choose>
-
 		</div>
 	</header>
 
@@ -766,30 +809,47 @@ a {
 				<div class="hero-badge">☀️ Weather Based Restaurant Pick</div>
 
 				<h1 class="hero-title">
-					오늘 날씨엔<br> 어떤 맛집이<br> <span>딱 좋을까요?</span>
+					오늘 날씨엔<br>
+					어떤 맛집이<br>
+					<span>딱 좋을까요?</span>
 				</h1>
 
 				<p class="hero-desc">
-					PickEat은 현재 위치와 날씨, 사용자의 취향을 바탕으로<br> 지금 가장 어울리는 맛집을 추천해주는
-					서비스입니다.
+					PickEat은 현재 위치와 날씨, 사용자의 취향을 바탕으로<br>
+					지금 가장 어울리는 맛집을 추천해주는 서비스입니다.
 				</p>
 
 				<div class="hero-buttons">
 					<a href="${contextPath}/recommend" class="primary-btn">지금 추천받기</a>
-					<a href="${contextPath}/restaurants" class="secondary-btn">맛집
-						둘러보기</a>
+					<a href="${contextPath}/restaurants" class="secondary-btn">맛집 둘러보기</a>
 				</div>
 
 				<div class="hero-stats">
-					<div class="stat-card">
-						<strong>날씨</strong> <span>API 연동 예정</span>
-					</div>
-					<div class="stat-card">
-						<strong>위치</strong> <span>지도 기반 추천</span>
-					</div>
-					<div class="stat-card">
-						<strong>취향</strong> <span>개인 맞춤 필터</span>
-					</div>
+
+					<a href="${contextPath}/recommend" class="stat-card">
+						<strong>🌦️ 날씨</strong>
+						<span>
+							오늘 날씨에 맞는<br>
+							메뉴 추천받기
+						</span>
+					</a>
+
+					<a href="${contextPath}/restaurants/map" class="stat-card">
+						<strong>📍 위치</strong>
+						<span>
+							내 주변 맛집을<br>
+							지도에서 확인
+						</span>
+					</a>
+
+					<a href="${contextPath}/recommend" class="stat-card">
+						<strong>🧡 취향</strong>
+						<span>
+							후보 입력 후<br>
+							돌림판 추천
+						</span>
+					</a>
+
 				</div>
 			</div>
 
@@ -797,15 +857,17 @@ a {
 				<div class="weather-card">
 					<div class="weather-left">
 						<div class="weather-icon">☀️</div>
+
 						<div>
 							<div class="weather-title">현재 위치 날씨</div>
 							<div class="weather-sub">서울 · 맑음 · 맛집 탐색 좋은 날</div>
 						</div>
 					</div>
+
 					<div class="weather-temp">23℃</div>
 				</div>
 
-				<div class="map-card">
+				<a href="${contextPath}/restaurants/map" class="map-card">
 					<div class="map-line line1"></div>
 					<div class="map-line line2"></div>
 					<div class="map-line line3"></div>
@@ -813,7 +875,7 @@ a {
 					<div class="pin pin-main"></div>
 					<div class="pin pin-sub1"></div>
 					<div class="pin pin-sub2"></div>
-				</div>
+				</a>
 
 				<div class="recommend-card">
 					<div class="recommend-top">
@@ -861,8 +923,12 @@ a {
 		<section class="section">
 			<div class="section-title-area">
 				<div class="section-kicker">SERVICE POINT</div>
+
 				<h2 class="section-title">PickEat은 이렇게 추천해요</h2>
-				<p class="section-desc">단순 맛집 목록이 아니라, 현재 상황에 맞는 음식을 먼저 생각합니다.</p>
+
+				<p class="section-desc">
+					단순 맛집 목록이 아니라, 현재 상황에 맞는 음식을 먼저 생각합니다.
+				</p>
 			</div>
 
 			<div class="feature-grid">
@@ -888,59 +954,109 @@ a {
 
 		<section class="popular-section">
 			<div class="popular-box">
+
 				<div class="popular-header">
 					<div>
-						<h2>인기 맛집 미리보기</h2>
-						<p>나중에 DB와 연결하면 이 영역에 실제 맛집 목록을 출력하면 됩니다.</p>
+						<h2>최근 본 맛집</h2>
+						<p>최근 1개월 안에 확인한 맛집을 다시 볼 수 있습니다.</p>
 					</div>
-					<a href="${contextPath}/restaurants" class="view-more">전체보기 →</a>
+
+					<a href="${contextPath}/restaurants/recent" class="view-more">전체보기 →</a>
 				</div>
 
-				<div class="restaurant-grid">
-					<div class="restaurant-card">
-						<div class="restaurant-img">🍣</div>
-						<div class="restaurant-body">
-							<div class="restaurant-name">스시 온도</div>
-							<div class="restaurant-info">
-								일식 · 800m<br> 깔끔한 점심 추천
-							</div>
-							<div class="restaurant-rating">★ 4.8</div>
+				<c:choose>
+					<c:when test="${empty recentList}">
+						<div class="empty-recent">
+							최근 본 맛집이 없습니다.<br>
+							맛집 리스트에서 상세페이지를 확인하면 이곳에 표시됩니다.
 						</div>
-					</div>
+					</c:when>
 
-					<div class="restaurant-card">
-						<div class="restaurant-img">🍜</div>
-						<div class="restaurant-body">
-							<div class="restaurant-name">라멘 하루</div>
-							<div class="restaurant-info">
-								라멘 · 1.2km<br> 쌀쌀한 날 추천
-							</div>
-							<div class="restaurant-rating">★ 4.7</div>
-						</div>
-					</div>
+					<c:otherwise>
+						<div class="restaurant-grid">
 
-					<div class="restaurant-card">
-						<div class="restaurant-img">🥩</div>
-						<div class="restaurant-body">
-							<div class="restaurant-name">고기집 오늘</div>
-							<div class="restaurant-info">
-								한식 · 650m<br> 저녁 모임 추천
-							</div>
-							<div class="restaurant-rating">★ 4.6</div>
-						</div>
-					</div>
+							<c:forEach var="restaurant" items="${recentList}" varStatus="status">
 
-					<div class="restaurant-card">
-						<div class="restaurant-img">🍝</div>
-						<div class="restaurant-body">
-							<div class="restaurant-name">파스타 무드</div>
-							<div class="restaurant-info">
-								양식 · 950m<br> 데이트 추천
-							</div>
-							<div class="restaurant-rating">★ 4.5</div>
+								<c:if test="${status.index < 4}">
+									<a href="${contextPath}/restaurants/${restaurant.restaurantId}"
+										class="restaurant-card">
+
+										<div class="restaurant-img">
+											<c:choose>
+												<c:when test="${fn:contains(restaurant.categoryName, '한식')}">
+													<img src="${contextPath}/resources/images/category/korean.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '중식')}">
+													<img src="${contextPath}/resources/images/category/chinese.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '일식')}">
+													<img src="${contextPath}/resources/images/category/japanese.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '양식') 
+													or fn:contains(restaurant.categoryName, '샐러드')}">
+													<img src="${contextPath}/resources/images/category/western.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '치킨')}">
+													<img src="${contextPath}/resources/images/category/chicken.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '분식')}">
+													<img src="${contextPath}/resources/images/category/snack_food.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '카페') 
+													or fn:contains(restaurant.categoryName, '디저트') 
+													or fn:contains(restaurant.categoryName, '커피')}">
+													<img src="${contextPath}/resources/images/category/cafe.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:when test="${fn:contains(restaurant.categoryName, '술집') 
+													or fn:contains(restaurant.categoryName, '호프') 
+													or fn:contains(restaurant.categoryName, '주점') 
+													or fn:contains(restaurant.categoryName, '이자카야')}">
+													<img src="${contextPath}/resources/images/category/bar.jpg"
+														alt="${restaurant.name}">
+												</c:when>
+
+												<c:otherwise>
+													<img src="${contextPath}/resources/images/no-image.png"
+														alt="${restaurant.name}">
+												</c:otherwise>
+											</c:choose>
+										</div>
+
+										<div class="restaurant-body">
+											<div class="restaurant-name">${restaurant.name}</div>
+
+											<div class="restaurant-info">
+												${restaurant.categoryName}<br>
+												최근 확인한 맛집
+											</div>
+
+											<div class="restaurant-rating">
+												★ ${restaurant.rating} · 다시 보기
+											</div>
+										</div>
+									</a>
+								</c:if>
+
+							</c:forEach>
+
 						</div>
-					</div>
-				</div>
+					</c:otherwise>
+				</c:choose>
+
 			</div>
 		</section>
 
@@ -950,16 +1066,18 @@ a {
 		<div class="footer-inner">
 			<div>
 				<div class="footer-logo">PickEat</div>
+
 				<div class="footer-text">
-					날씨와 위치, 취향을 바탕으로 맛집을 추천하는 서비스<br> Team Project · Weather
-					Restaurant Recommendation
+					날씨와 위치, 취향을 바탕으로 맛집을 추천하는 서비스<br>
+					Team Project · Weather Restaurant Recommendation
 				</div>
 			</div>
 
 			<div class="footer-links">
-				<a href="${contextPath}/">홈</a> <a href="${contextPath}/recommend">추천</a>
-				<a href="${contextPath}/restaurants">맛집 리스트</a> <a
-					href="${contextPath}/member/login">로그인</a>
+				<a href="${contextPath}/">홈</a>
+				<a href="${contextPath}/recommend">추천</a>
+				<a href="${contextPath}/restaurants">맛집 리스트</a>
+				<a href="${contextPath}/member/login">로그인</a>
 			</div>
 		</div>
 	</footer>
