@@ -427,23 +427,7 @@ a {
 
 <body>
 
-	<header class="header">
-		<a href="${contextPath}/" class="logo"> 픽잇 <span class="logo-icon"></span>
-		</a>
-
-		<nav class="nav">
-			<a href="${contextPath}/">홈</a> <a href="${contextPath}/recommend">추천</a>
-			<a href="${contextPath}/restaurants">맛집 리스트</a> <a
-				href="${contextPath}/review">리뷰</a> <a href="${contextPath}/mypage">마이페이지</a>
-		</nav>
-
-		<div class="header-actions">
-			<a href="${contextPath}/member/login"
-				class="header-btn login-header-btn">로그인</a> <a
-				href="${contextPath}/member/signup"
-				class="header-btn join-header-btn">회원가입</a>
-		</div>
-	</header>
+	<%@ include file = "/WEB-INF/views/header.jsp" %>
 
 	<main class="login-page">
 		<section class="login-container">
@@ -502,16 +486,14 @@ a {
 
 					<div class="or-box">또는</div>
 
-					<!-- 카카오 API 키는 아직 연결하지 않은 상태 -->
-					<button type="button" class="kakao-btn"
-						onclick="alert('카카오 로그인 API는 아직 연결되지 않았습니다.');">
-						<span class="kakao-icon">톡</span> 카카오로 로그인
-					</button>
+					<a class="kakao-login-btn"
+						href="${pageContext.request.contextPath}/member/kakao/login">
+						카카오 로그인 </a>
 				</div>
 			</div>
 
 		</section>
 	</main>
-
+	<%@ include file = "/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

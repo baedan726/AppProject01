@@ -66,6 +66,7 @@ public class AdminRestaurantController {
     @GetMapping("/admin/restaurants/add")
     public String addRestaurantForm(Model model) {
         model.addAttribute("restaurant", new Restaurant());
+        model.addAttribute("edit",false);
         return "admin/restaurant/form";
     }
 
@@ -84,6 +85,7 @@ public class AdminRestaurantController {
 
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("edit",true);
         return "admin/restaurant/form";
     }
 

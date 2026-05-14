@@ -68,8 +68,8 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 	@Override
 	public void insertRestaurant(Restaurant restaurant) {
 		String sql = "INSERT IGNORE INTO RESTAURANT "
-				+ "(api_place_id, category_id, kakao_category_name, name, address, latitude, longitude, phone, opening_hours, price_range, description, place_url, status) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "(api_place_id, category_id, kakao_category_name, name, address, latitude, longitude, phone, opening_hours, price_range, description, place_url) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		template.update(sql,
 				restaurant.getApiPlaceId(),
@@ -83,38 +83,23 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 				restaurant.getOpeningHours(),
 				restaurant.getPriceRange(),
 				restaurant.getDescription(),
-				restaurant.getPlaceUrl(),
-				restaurant.getStatus());
+				restaurant.getPlaceUrl());
 	}
 
 	@Override
 	public void updateRestaurant(Restaurant restaurant) {
-		String sql = "UPDATE RESTAURANT "
-				// 수정: kakao_category_name, place_url도 수정 가능하게 추가
-				+ "SET category_id = ?, kakao_category_name = ?, name = ?, address = ?, latitude = ?, longitude = ?, phone = ?, opening_hours = ?, price_range = ?, description = ?, place_url = ?, status = ? "
-				+ "WHERE restaurant_id = ?";
-
+		String sql = "update RESTAURANT set name = ?, phone = ? , address = ? , price_range = ? , opening_hours = ?, description = ?, status = ? where restaurant_id = ? ";
 		template.update(sql,
-				restaurant.getCategoryId(),
-				restaurant.getKakaoCategoryName(),
-				restaurant.getName(),
-				restaurant.getAddress(),
-				restaurant.getLatitude(),
-				restaurant.getLongitude(),
-				restaurant.getPhone(),
-				restaurant.getOpeningHours(),
-				restaurant.getPriceRange(),
-				restaurant.getDescription(),
-				restaurant.getPlaceUrl(),
-				restaurant.getStatus(),
-				restaurant.getRestaurantId());
+				restaurant.getName(), restaurant.getPhone(), restaurant.getAddress(),restaurant.getPriceRange(),restaurant.getOpeningHours(),restaurant.getDescription(), restaurant.getStatus(),restaurant.getRestaurantId());
 	}
 
 	@Override
 	public void deleteRestaurant(Long restaurantId) {
-		String sql = "UPDATE RESTAURANT SET status = 'INACTIVE' WHERE restaurant_id = ?";
 
-		template.update(sql, restaurantId);
+	    String sql = "DELETE FROM RESTAURANT WHERE restaurant_id = ?";
+
+	    template.update(sql, restaurantId);
+
 	}
 	
 	@Override
@@ -444,58 +429,71 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 	@Override
 	public List<RestaurantDTO> getNearRestaurants(String keyword, Double lat, Double lng, int limit) {
 
-		StringBuilder sql = new StringBuilder();
+	    StringBuilder sql = new StringBuilder();
 
-		sql.append("SELECT r.restaurant_id, r.name, ");
-		// 수정
-		sql.append("COALESCE(r.kakao_category_name, c.category_name) AS category_name, ");
-		sql.append("IFNULL(AVG(rv.rating), 0) AS rating, ");
-		sql.append("MIN(ri.image_url) AS image_url, ");
-		sql.append("r.latitude, r.longitude ");
+	    sql.append("SELECT ");
+	    sql.append("r.restaurant_id, ");
+	    sql.append("r.name, ");
+	    sql.append("COALESCE(r.kakao_category_name, c.category_name) AS category_name, ");
+	    sql.append("IFNULL(AVG(rv.rating), 0) AS rating, ");
+	    sql.append("MIN(ri.image_url) AS image_url, ");
+	    sql.append("r.latitude, ");
+	    sql.append("r.longitude, ");
 
-		sql.append("FROM RESTAURANT r ");
+	    // 실제 거리 계산, 단위 km -- 6371 * 의 의미는 지구 반지름 km ACOS의 의미는 거리(라디언값)
+	    sql.append("ROUND ((");
+	    sql.append("6371 * ACOS(");
+	    sql.append("COS(RADIANS(?)) ");
+	    sql.append("* COS(RADIANS(r.latitude)) ");
+	    sql.append("* COS(RADIANS(r.longitude) - RADIANS(?)) ");
+	    sql.append("+ SIN(RADIANS(?)) ");
+	    sql.append("* SIN(RADIANS(r.latitude))");
+	    sql.append(")");
+	    sql.append("), 3) AS distance ");
 
-		sql.append("LEFT JOIN CATEGORY c ");
-		sql.append("ON r.category_id = c.category_id ");
+	    sql.append("FROM RESTAURANT r ");
+	    sql.append("LEFT JOIN CATEGORY c ON r.category_id = c.category_id ");
+	    sql.append("LEFT JOIN REVIEW rv ON r.restaurant_id = rv.restaurant_id ");
+	    sql.append("LEFT JOIN RESTAURANT_IMAGE ri ON r.restaurant_id = ri.restaurant_id ");
 
-		sql.append("LEFT JOIN REVIEW rv ");
-		sql.append("ON r.restaurant_id = rv.restaurant_id ");
+	    sql.append("WHERE r.status = 'ACTIVE' ");
+	    sql.append("AND r.latitude IS NOT NULL ");
+	    sql.append("AND r.longitude IS NOT NULL ");
 
-		sql.append("LEFT JOIN RESTAURANT_IMAGE ri ");
-		sql.append("ON r.restaurant_id = ri.restaurant_id ");
+	    sql.append("AND ( ");
+	    sql.append("r.name LIKE ? ");
+	    sql.append("OR r.address LIKE ? ");
+	    sql.append("OR c.category_name LIKE ? ");
+	    sql.append("OR r.kakao_category_name LIKE ? ");
+	    sql.append("OR r.description LIKE ? ");
+	    sql.append(") ");
 
-		sql.append("WHERE r.status = 'ACTIVE' ");
-		sql.append("AND r.latitude IS NOT NULL ");
-		sql.append("AND r.longitude IS NOT NULL ");
+	    sql.append("GROUP BY ");
+	    sql.append("r.restaurant_id, ");
+	    sql.append("r.name, ");
+	    sql.append("r.kakao_category_name, ");
+	    sql.append("c.category_name, ");
+	    sql.append("r.latitude, ");
+	    sql.append("r.longitude ");
 
-		sql.append("AND ( ");
-		sql.append("r.name LIKE ? ");
-		sql.append("OR r.address LIKE ? ");
-		sql.append("OR c.category_name LIKE ? ");
-		// 수정
-		sql.append("OR r.kakao_category_name LIKE ? ");
-		sql.append("OR r.description LIKE ? ");
-		sql.append(") ");
+	    sql.append("HAVING distance <= 3 ");
+	    sql.append("ORDER BY RAND() ");
+	    sql.append("LIMIT ? ");
 
-		// 수정
-		sql.append("GROUP BY r.restaurant_id, r.name, r.kakao_category_name, c.category_name, r.latitude, r.longitude ");
+	    String keywordLike = "%" + keyword + "%";
 
-		sql.append("ORDER BY ");
-		sql.append("(POW(r.latitude - ?, 2) + POW(r.longitude - ?, 2)) ASC ");
-
-		sql.append("LIMIT ?");
-
-		String keywordLike = "%" + keyword + "%";
-
-		return template.query(sql.toString(), new RestaurantDTORowMapper(),
-				keywordLike,
-				keywordLike,
-				keywordLike,
-				// 수정: r.kakao_category_name LIKE ? 파라미터 추가
-				keywordLike,
-				keywordLike,
-				lat,
-				lng,
-				limit);
+	    return template.query(
+	            sql.toString(),
+	            new RestaurantDTORowMapper(),
+	            lat,
+	            lng,
+	            lat,
+	            keywordLike,
+	            keywordLike,
+	            keywordLike,
+	            keywordLike,
+	            keywordLike,
+	            limit
+	    );
 	}
 }

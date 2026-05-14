@@ -186,20 +186,7 @@ body {
 
 <body>
 
-	<header class="header">
-		<a href="${contextPath}/" class="logo"> <span class="logo-text">픽잇</span>
-			<span class="logo-icon"></span>
-		</a>
-
-		<nav class="nav">
-			<a href="${contextPath}/">홈</a> 
-			<a href="${contextPath}/recommend" class="active">추천</a> 
-			<a href="${contextPath}/restaurants">맛집 리스트</a>
-			<a href="${contextPath}/bookmark/list">즐겨찾기</a>
-			<a href="${contextPath}/review">리뷰</a> 
-			<a href="${contextPath}/mypage">마이페이지</a>
-		</nav>
-	</header>
+	<%@ include file="/WEB-INF/views/header.jsp"%>
 
 	<main class="container">
 
@@ -272,7 +259,7 @@ body {
 							</c:when>
 
 							<c:otherwise>
-								<img src="${contextPath}/resources/images/no-image.png">
+								<img src="${contextPath}/resources/images/category/etc_food.png">
 							</c:otherwise>
 
 						</c:choose>
@@ -282,8 +269,12 @@ body {
 						<h3>${r.name}</h3>
 						<div class="rating">★ ${r.rating}</div>
 						<span class="tag">근처 맛집</span> <span class="tag">${r.categoryName}</span>
-						<span class="tag">${selectedFood}</span> <br> <br> <a
-							class="btn btn-main"
+						<span class="tag">${selectedFood}</span>
+
+						<c:if test="${not empty r.distance}">
+							<span class="tag">${r.distance} km</span>
+						</c:if>
+						<br> <br> <a class="btn btn-main"
 							href="${contextPath}/restaurants/${r.restaurantId}"> 상세보기 </a>
 					</div>
 				</div>
@@ -292,6 +283,6 @@ body {
 		</section>
 
 	</main>
-
+	<%@ include file="/WEB-INF/views/footer.jsp"%>
 </body>
 </html>

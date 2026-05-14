@@ -4,523 +4,757 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>PickEat - 맛집 관리</title>
+<title>PickEat 관리자 | 맛집 관리</title>
 
 <style>
 * {
-    box-sizing: border-box;
-    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-    margin: 0;
-    background: #fff7ed;
-    color: #111827;
+	font-family: 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
+	min-height: 100vh;
+	background: linear-gradient(135deg, #fff7ed 0%, #fff1e6 45%, #fef3c7 100%);
+	color: #2f241d;
 }
 
-.header {
-    height: 70px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
+.admin-layout {
+	display: flex;
+	min-height: 100vh;
+}
+
+/* 왼쪽 배너 */
+.sidebar {
+	width: 250px;
+	background: #2f241d;
+	color: #fff;
+	padding: 30px 24px;
+	box-shadow: 8px 0 24px rgba(47, 36, 29, 0.15);
+	flex-shrink: 0;
+}
+
+.logo-box {
+	margin-bottom: 45px;
+}
+
+.logo-link {
+	display: inline-block;
+	text-decoration: none;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
+	font-size: 30px;
+	font-weight: 900;
+	color: #ffb86b;
+	letter-spacing: -1px;
+	transition: 0.2s;
 }
 
-.logo-text {
-    font-size: 26px;
-    font-weight: 900;
-    color: #111827;
+.logo span {
+	color: #fff;
 }
 
-.logo-icon {
-    width: 22px;
-    height: 28px;
-    background: #ff6500;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
+.logo-link:hover .logo {
+	transform: translateY(-1px);
+	filter: brightness(1.08);
 }
 
-.nav {
-    display: flex;
-    gap: 32px;
+.logo-desc {
+	font-size: 13px;
+	color: #d6c7b8;
+	margin-top: 8px;
+	line-height: 1.5;
 }
 
-.nav a {
-    text-decoration: none;
-    color: #111827;
-    font-weight: 800;
+.menu-title {
+	font-size: 12px;
+	color: #a99584;
+	margin-bottom: 12px;
+	text-transform: uppercase;
+	font-weight: 900;
 }
 
-.nav a.active {
-    color: #ff6500;
+.menu-list {
+	list-style: none;
 }
 
-.container {
-    padding: 44px 60px;
+.menu-list li {
+	margin-bottom: 10px;
 }
 
-.page-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 26px;
+.menu-list a {
+	display: block;
+	text-decoration: none;
+	color: #eee2d6;
+	padding: 13px 15px;
+	border-radius: 14px;
+	transition: 0.2s;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.menu-list a:hover,
+.menu-list a.active {
+	background: #ff914d;
+	color: #fff;
+	box-shadow: 0 8px 18px rgba(255, 145, 77, 0.35);
+}
+
+/* 오른쪽 본문 */
+.main {
+	flex: 1;
+	padding: 38px 48px;
+	overflow-x: hidden;
+}
+
+.top-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 20px;
+	margin-bottom: 28px;
 }
 
 .page-title h1 {
-    font-size: 38px;
-    margin: 0 0 10px;
+	font-size: 34px;
+	color: #2f241d;
+	margin-bottom: 8px;
 }
 
 .page-title p {
-    margin: 0;
-    color: #6b7280;
-    font-weight: 700;
+	color: #7a6a5d;
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.admin-badge {
+	display: inline-block;
+	background: rgba(255, 255, 255, 0.78);
+	border: 1px solid rgba(255, 184, 107, 0.45);
+	color: #a15c22;
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 13px;
+	font-weight: 900;
+	white-space: nowrap;
+}
+
+/* 상단 안내 카드 */
+.summary-card {
+	position: relative;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 0.86);
+	border: 1px solid rgba(255, 184, 107, 0.35);
+	border-radius: 28px;
+	box-shadow: 0 18px 45px rgba(90, 64, 43, 0.13);
+	padding: 30px 32px;
+	margin-bottom: 24px;
+}
+
+.summary-card::after {
+	content: "🍽️";
+	position: absolute;
+	right: 32px;
+	bottom: 14px;
+	font-size: 86px;
+	opacity: 0.11;
+}
+
+.summary-title {
+	font-size: 25px;
+	font-weight: 900;
+	color: #2f241d;
+	margin-bottom: 10px;
+}
+
+.summary-text {
+	color: #7a6a5d;
+	line-height: 1.7;
+	font-size: 15px;
+	max-width: 720px;
+}
+
+/* 검색 카드 */
+.search-area {
+	background: rgba(255, 255, 255, 0.86);
+	border: 1px solid rgba(255, 184, 107, 0.35);
+	border-radius: 24px;
+	padding: 22px;
+	margin-bottom: 24px;
+	box-shadow: 0 14px 34px rgba(90, 64, 43, 0.1);
 }
 
 .search-form {
-    display: flex;
-    gap: 10px;
-    margin-top: 18px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 .search-input {
-    width: 320px;
-    height: 44px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 0 16px;
-    font-size: 14px;
-    font-weight: 700;
-    outline: none;
+	flex: 1;
+	min-width: 260px;
+	height: 48px;
+	padding: 0 16px;
+	border-radius: 15px;
+	border: 1px solid #f4d7b7;
+	background: #fffaf3;
+	color: #2f241d;
+	font-size: 14px;
+	font-weight: 700;
+	outline: none;
+	font-family: inherit;
+}
+
+.search-input::placeholder {
+	color: #b49376;
 }
 
 .search-input:focus {
-    border-color: #ff6500;
-    box-shadow: 0 0 0 3px rgba(255, 101, 0, 0.12);
+	border-color: #ff914d;
+	box-shadow: 0 0 0 4px rgba(255, 145, 77, 0.16);
 }
 
-.search-btn {
-    height: 44px;
-    padding: 0 18px;
-    border: none;
-    border-radius: 12px;
-    background: #111827;
-    color: white;
-    font-weight: 900;
-    cursor: pointer;
+.search-btn,
+.reset-btn,
+.add-btn {
+	height: 48px;
+	padding: 0 20px;
+	border-radius: 15px;
+	font-size: 14px;
+	font-weight: 900;
+	font-family: inherit;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.2s;
 }
 
-.search-btn:hover {
-    background: #1f2937;
+.search-btn,
+.add-btn {
+	border: none;
+	background: #ff914d;
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(255, 145, 77, 0.32);
 }
 
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 64px;
-    height: 42px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 12px;
-    padding: 0 18px;
-    font-weight: 900;
-    text-align: center;
-    white-space: nowrap;
+.search-btn:hover,
+.add-btn:hover {
+	background: #f97316;
+	transform: translateY(-1px);
 }
 
-.btn-orange {
-    background: #ff6500;
-    color: #fff;
+.reset-btn {
+	border: 1px solid #f4d7b7;
+	background: #fff3df;
+	color: #b45309;
 }
 
-.btn-outline {
-    background: #fff;
-    color: #111827;
-    border: 1px solid #ddd;
+.reset-btn:hover {
+	background: #fed7aa;
 }
 
-.btn-dark {
-    background: #111827;
-    color: #fff;
+.search-info {
+	margin-top: 14px;
+	color: #7a6a5d;
+	font-size: 13px;
+	font-weight: 800;
 }
 
-.admin-card {
-    background: #fff;
-    border-radius: 22px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    border: 1px solid #ffe0c2;
+.search-info strong {
+	color: #f97316;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+/* 목록 카드 */
+.content-card {
+	background: rgba(255, 255, 255, 0.86);
+	border: 1px solid rgba(255, 184, 107, 0.35);
+	border-radius: 28px;
+	box-shadow: 0 18px 45px rgba(90, 64, 43, 0.13);
+	padding: 28px;
 }
 
-.table th {
-    text-align: left;
-    color: #6b7280;
-    font-size: 14px;
-    padding: 14px 12px;
-    border-bottom: 1px solid #eee;
+.table-wrap {
+	overflow-x: auto;
 }
 
-.table td {
-    padding: 18px 12px;
-    border-bottom: 1px solid #f1f1f1;
-    font-weight: 700;
-    vertical-align: middle;
-    height: 92px;
+table {
+	width: 100%;
+	border-collapse: collapse;
+	overflow: hidden;
+	border-radius: 20px;
+	background: #fffaf3;
 }
 
-.table th:nth-child(1),
-.table td:nth-child(1) {
-    width: 90px;
+th {
+	background: #fff3df;
+	padding: 16px;
+	color: #a15c22;
+	text-align: left;
+	font-size: 14px;
+	border-bottom: 1px solid #f3dcc5;
+	white-space: nowrap;
 }
 
-.table th:nth-child(2),
-.table td:nth-child(2) {
-    width: 32%;
+td {
+	padding: 16px;
+	border-bottom: 1px solid #f3dcc5;
+	color: #2f241d;
+	vertical-align: middle;
+	font-size: 14px;
 }
 
-.table th:nth-child(3),
-.table td:nth-child(3) {
-    width: 28%;
+tbody tr:hover {
+	background: #fff7ed;
 }
 
-.table th:nth-child(4),
-.table td:nth-child(4) {
-    width: 110px;
+.id-cell {
+	font-weight: 900;
+	color: #a15c22;
+	white-space: nowrap;
 }
 
-.table th:nth-child(5),
-.table td:nth-child(5) {
-    width: 260px;
-}
-
-.table tr:last-child td {
-    border-bottom: none;
-}
-
-.name {
-    font-size: 18px;
-    font-weight: 900;
-    color: #111827;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.name-cell {
+	font-weight: 900;
+	color: #2f241d;
+	max-width: 340px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .category {
-    display: inline-block;
-    background: #fff3e8;
-    color: #ff6500;
-    padding: 7px 11px;
-    border-radius: 999px;
-    font-weight: 900;
-    font-size: 13px;
-    max-width: 230px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: middle;
+	display: inline-block;
+	background: #fff3df;
+	color: #b45309;
+	padding: 8px 12px;
+	border-radius: 999px;
+	font-weight: 900;
+	font-size: 13px;
+	max-width: 260px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	border: 1px solid #f4d7b7;
+}
+
+.rating-cell {
+	color: #f97316;
+	font-weight: 900;
+	white-space: nowrap;
 }
 
 .actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: nowrap;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: nowrap;
+}
+
+.action-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 40px;
+	padding: 0 15px;
+	border-radius: 13px;
+	font-weight: 900;
+	font-size: 14px;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: 0.2s;
+	font-family: inherit;
+}
+
+.view-btn {
+	background: #ff914d;
+	color: #fff;
+	border: none;
+	box-shadow: 0 8px 20px rgba(255, 145, 77, 0.26);
+}
+
+.view-btn:hover {
+	background: #f97316;
+	transform: translateY(-1px);
+}
+
+.edit-btn {
+	background: #fff3df;
+	color: #b45309;
+	border: 1px solid #f4d7b7;
+}
+
+.edit-btn:hover {
+	background: #fed7aa;
+}
+
+.delete-btn {
+	background: #fff;
+	color: #dc2626;
+	border: 1px solid #fecaca;
+}
+
+.delete-btn:hover {
+	background: #fee2e2;
 }
 
 .delete-form {
-    margin: 0;
+	margin: 0;
 }
 
-.empty-box {
-    padding: 70px 20px;
-    text-align: center;
-    color: #6b7280;
-    font-weight: 800;
+.empty {
+	padding: 70px 20px;
+	text-align: center;
+	color: #7a6a5d;
+	background: #fffaf3;
+	border: 1px dashed #f4c999;
+	border-radius: 22px;
+	font-weight: 800;
 }
 
-.empty-box strong {
-    color: #ff6500;
+.empty strong {
+	color: #f97316;
 }
 
+/* 페이징 */
 .pagination-wrap {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 28px;
-    flex-wrap: wrap;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	margin-top: 30px;
+	flex-wrap: wrap;
 }
 
 .pagination-wrap a,
 .pagination-wrap span {
-    min-width: 42px;
-    height: 42px;
-    padding: 0 14px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    text-decoration: none;
-    color: #111827;
+	min-width: 38px;
+	height: 38px;
+	padding: 0 13px;
+	border-radius: 999px;
+	background: #fff3df;
+	color: #b45309;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 900;
+	font-size: 14px;
+	border: 1px solid #f4d7b7;
+	transition: 0.2s;
 }
 
 .pagination-wrap a:hover {
-    border-color: #ff6500;
-    color: #ff6500;
+	background: #fed7aa;
+	transform: translateY(-1px);
 }
 
 .pagination-wrap a.active {
-    background: #ff6500;
-    border-color: #ff6500;
-    color: white;
+	background: #ff914d;
+	color: #fff;
+	border-color: #ff914d;
+	box-shadow: 0 8px 18px rgba(255, 145, 77, 0.28);
 }
 
-.pagination-wrap .disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
+.pagination-wrap span.disabled {
+	opacity: 0.45;
+	cursor: default;
 }
 
 .page-info {
-    text-align: center;
-    margin-top: 12px;
-    color: #6b7280;
-    font-weight: 800;
+	text-align: center;
+	margin-top: 16px;
+	color: #7a6a5d;
+	font-size: 13px;
+	font-weight: 800;
 }
 
+/* 반응형 */
 @media (max-width: 900px) {
-    .container {
-        padding: 30px 20px;
-    }
+	.admin-layout {
+		display: block;
+	}
 
-    .page-head {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
+	.sidebar {
+		width: 100%;
+	}
 
-    .search-form {
-        width: 100%;
-        flex-direction: column;
-    }
+	.main {
+		padding: 28px 20px;
+	}
 
-    .search-input {
-        width: 100%;
-    }
+	.top-bar {
+		display: block;
+	}
 
-    .admin-card {
-        overflow-x: auto;
-    }
+	.admin-badge {
+		margin-top: 16px;
+	}
 
-    .table {
-        min-width: 900px;
-    }
+	.search-form {
+		display: block;
+	}
+
+	.search-input {
+		width: 100%;
+		min-width: 100%;
+		margin-bottom: 10px;
+	}
+
+	.search-btn,
+	.reset-btn,
+	.add-btn {
+		width: 100%;
+		margin-bottom: 8px;
+	}
+
+	.content-card {
+		padding: 20px;
+	}
 }
 </style>
 </head>
 
 <body>
 
-<header class="header">
-    <a href="${contextPath}/" class="logo">
-        <span class="logo-text">픽잇</span>
-        <span class="logo-icon"></span>
-    </a>
+<div class="admin-layout">
 
-    <nav class="nav">
-        <a href="${contextPath}/">홈</a>
-        <a href="${contextPath}/recommend">추천</a>
-        <a href="${contextPath}/restaurants">맛집 리스트</a>
-        <a href="${contextPath}/bookmark/list">즐겨찾기</a>
-        <a href="${contextPath}/admin/restaurants" class="active">맛집 관리</a>
-    </nav>
-</header>
+	<!-- 왼쪽 배너 -->
+	<aside class="sidebar">
+		<div class="logo-box">
+			<a href="${contextPath}/" class="logo-link">
+				<div class="logo">Pick<span>Eat</span></div>
+			</a>
+			<div class="logo-desc">날씨와 상황에 맞는 맛집 추천 서비스</div>
+		</div>
 
-<main class="container">
+		<div class="menu-title">Admin Menu</div>
 
-    <section class="page-head">
-        <div class="page-title">
-            <h1>맛집 관리 🍽️</h1>
+		<ul class="menu-list">
+			<li>
+				<a href="${contextPath}/admin">대시보드</a>
+			</li>
+			<li>
+				<a href="${contextPath}/admin/members">회원 관리</a>
+			</li>
+			<li>
+				<a href="${contextPath}/admin/inquiries">문의 관리</a>
+			</li>
+			<li>
+				<a href="${contextPath}/admin/restaurants" class="active">맛집 관리</a>
+			</li>
+			<li>
+				<a href="${contextPath}/admin/reviewList">리뷰 관리</a>
+			</li>
+		</ul>
+	</aside>
 
-            <p>등록된 맛집을 확인하고 수정하거나 삭제할 수 있어요.</p>
+	<!-- 오른쪽 본문 -->
+	<main class="main">
 
-            <form class="search-form"
-                  action="${contextPath}/admin/restaurants"
-                  method="get">
+		<div class="top-bar">
+			<div class="page-title">
+				<h1>맛집 관리</h1>
+				<p>등록된 맛집을 확인하고 수정하거나 삭제할 수 있습니다.</p>
+			</div>
 
-                <input type="text"
-                       name="keyword"
-                       class="search-input"
-                       placeholder="맛집명을 검색하세요"
-                       value="${keyword}">
+			<div class="admin-badge">RESTAURANT MODE</div>
+		</div>
 
-                <input type="hidden" name="size" value="${pageDTO.size}">
+		<section class="summary-card">
+			<div class="summary-title">맛집 데이터 관리 센터</div>
+			<p class="summary-text">
+				등록된 맛집 정보를 확인하고, 필요한 경우 수정하거나 삭제할 수 있습니다.
+				검색 기능을 사용하면 원하는 맛집을 빠르게 찾을 수 있습니다.
+			</p>
+		</section>
 
-                <button type="submit" class="search-btn">
-                    검색
-                </button>
+		<section class="search-area">
+			<form class="search-form"
+				  action="${contextPath}/admin/restaurants"
+				  method="get">
 
-                <a href="${contextPath}/admin/restaurants"
-                   class="btn btn-outline">
-                    초기화
-                </a>
-            </form>
-        </div>
+				<input type="text"
+					   name="keyword"
+					   class="search-input"
+					   placeholder="맛집명을 검색하세요"
+					   value="${keyword}">
 
-        <a class="btn btn-orange" href="${contextPath}/admin/restaurants/add">
-            + 맛집 등록
-        </a>
-    </section>
+				<input type="hidden" name="size" value="${pageDTO.size}">
 
-    <section class="admin-card">
+				<button type="submit" class="search-btn">
+					검색
+				</button>
 
-        <c:choose>
-            <c:when test="${empty restaurantList}">
-                <div class="empty-box">
-                    <c:choose>
-                        <c:when test="${not empty keyword}">
-                            <strong>${keyword}</strong>에 해당하는 맛집이 없습니다.
-                        </c:when>
+				<a href="${contextPath}/admin/restaurants"
+				   class="reset-btn">
+					초기화
+				</a>
 
-                        <c:otherwise>
-                            등록된 맛집이 없습니다.
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </c:when>
+				<a href="${contextPath}/admin/restaurants/add"
+				   class="add-btn">
+					+ 맛집 등록
+				</a>
+			</form>
 
-            <c:otherwise>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>맛집명</th>
-                            <th>카테고리</th>
-                            <th>평점</th>
-                            <th>관리</th>
-                        </tr>
-                    </thead>
+			<c:if test="${not empty keyword}">
+				<div class="search-info">
+					<strong>${keyword}</strong> 검색 결과입니다.
+				</div>
+			</c:if>
+		</section>
 
-                    <tbody>
-                        <c:forEach var="restaurant" items="${restaurantList}">
-                            <tr>
-                                <td>${restaurant.restaurantId}</td>
+		<section class="content-card">
 
-                                <td>
-                                    <div class="name">${restaurant.name}</div>
-                                </td>
+			<c:choose>
+				<c:when test="${empty restaurantList}">
+					<div class="empty">
+						<c:choose>
+							<c:when test="${not empty keyword}">
+								<strong>${keyword}</strong>에 해당하는 맛집이 없습니다.
+							</c:when>
 
-                                <td>
-                                    <span class="category" title="${restaurant.categoryName}">
-                                        ${restaurant.categoryName}
-                                    </span>
-                                </td>
+							<c:otherwise>
+								등록된 맛집이 없습니다.
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</c:when>
 
-                                <td>★ ${restaurant.rating}</td>
+				<c:otherwise>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>맛집명</th>
+									<th>카테고리</th>
+									<th>평점</th>
+									<th>관리</th>
+								</tr>
+							</thead>
 
-                                <td>
-                                    <div class="actions">
-                                        <a class="btn btn-dark"
-                                           href="${contextPath}/restaurants/${restaurant.restaurantId}">
-                                            보기
-                                        </a>
+							<tbody>
+								<c:forEach var="restaurant" items="${restaurantList}">
+									<tr>
+										<td class="id-cell">
+											${restaurant.restaurantId}
+										</td>
 
-                                        <a class="btn btn-outline"
-                                           href="${contextPath}/admin/restaurants/update?restaurantId=${restaurant.restaurantId}">
-                                            수정
-                                        </a>
+										<td>
+											<div class="name-cell">
+												${restaurant.name}
+											</div>
+										</td>
 
-                                        <form class="delete-form"
-                                              action="${contextPath}/admin/restaurants/delete"
-                                              method="post"
-                                              onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                                            <input type="hidden"
-                                                   name="restaurantId"
-                                                   value="${restaurant.restaurantId}">
+										<td>
+											<span class="category" title="${restaurant.categoryName}">
+												${restaurant.categoryName}
+											</span>
+										</td>
 
-                                            <button type="submit"
-                                                    class="btn btn-outline">
-                                                삭제
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+										<td class="rating-cell">
+											★ ${restaurant.rating}
+										</td>
 
-                <c:if test="${pageDTO.totalPage > 0}">
-                    <div class="pagination-wrap">
+										<td>
+											<div class="actions">
+												<a class="action-btn view-btn"
+												   href="${contextPath}/restaurants/${restaurant.restaurantId}">
+													보기
+												</a>
 
-                        <c:choose>
-                            <c:when test="${pageDTO.page > 1}">
-                                <a href="${contextPath}/admin/restaurants?page=${pageDTO.page - 1}&size=${pageDTO.size}&keyword=${keyword}">
-                                    이전
-                                </a>
-                            </c:when>
+												<a class="action-btn edit-btn"
+												   href="${contextPath}/admin/restaurants/update?restaurantId=${restaurant.restaurantId}">
+													수정
+												</a>
 
-                            <c:otherwise>
-                                <span class="disabled">이전</span>
-                            </c:otherwise>
-                        </c:choose>
+												<form class="delete-form"
+													  action="${contextPath}/admin/restaurants/delete"
+													  method="post"
+													  onsubmit="return confirm('정말 삭제하시겠습니까?');">
 
-                        <c:forEach var="num"
-                                   begin="${pageDTO.startPage}"
-                                   end="${pageDTO.endPage}">
-                            <a href="${contextPath}/admin/restaurants?page=${num}&size=${pageDTO.size}&keyword=${keyword}"
-                               class="${pageDTO.page == num ? 'active' : ''}">
-                                ${num}
-                            </a>
-                        </c:forEach>
+													<input type="hidden"
+														   name="${_csrf.parameterName}"
+														   value="${_csrf.token}">
 
-                        <c:choose>
-                            <c:when test="${pageDTO.page < pageDTO.totalPage}">
-                                <a href="${contextPath}/admin/restaurants?page=${pageDTO.page + 1}&size=${pageDTO.size}&keyword=${keyword}">
-                                    다음
-                                </a>
-                            </c:when>
+													<input type="hidden"
+														   name="restaurantId"
+														   value="${restaurant.restaurantId}">
 
-                            <c:otherwise>
-                                <span class="disabled">다음</span>
-                            </c:otherwise>
-                        </c:choose>
+													<button type="submit"
+															class="action-btn delete-btn">
+														삭제
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
 
-                    </div>
+					<c:if test="${pageDTO.totalPage > 0}">
+						<div class="pagination-wrap">
 
-                    <div class="page-info">
-                        현재 ${pageDTO.page}페이지 / 전체 ${pageDTO.totalPage}페이지
-                    </div>
-                </c:if>
+							<c:choose>
+								<c:when test="${pageDTO.page > 1}">
+									<a href="${contextPath}/admin/restaurants?page=${pageDTO.page - 1}&size=${pageDTO.size}&keyword=${keyword}">
+										이전
+									</a>
+								</c:when>
 
-            </c:otherwise>
-        </c:choose>
+								<c:otherwise>
+									<span class="disabled">이전</span>
+								</c:otherwise>
+							</c:choose>
 
-    </section>
+							<c:forEach var="num"
+									   begin="${pageDTO.startPage}"
+									   end="${pageDTO.endPage}">
+								<a href="${contextPath}/admin/restaurants?page=${num}&size=${pageDTO.size}&keyword=${keyword}"
+								   class="${pageDTO.page == num ? 'active' : ''}">
+									${num}
+								</a>
+							</c:forEach>
 
-</main>
+							<c:choose>
+								<c:when test="${pageDTO.page < pageDTO.totalPage}">
+									<a href="${contextPath}/admin/restaurants?page=${pageDTO.page + 1}&size=${pageDTO.size}&keyword=${keyword}">
+										다음
+									</a>
+								</c:when>
+
+								<c:otherwise>
+									<span class="disabled">다음</span>
+								</c:otherwise>
+							</c:choose>
+
+						</div>
+
+						<div class="page-info">
+							현재 ${pageDTO.page}페이지 / 전체 ${pageDTO.totalPage}페이지
+						</div>
+					</c:if>
+
+				</c:otherwise>
+			</c:choose>
+
+		</section>
+
+	</main>
+
+</div>
 
 </body>
 </html>

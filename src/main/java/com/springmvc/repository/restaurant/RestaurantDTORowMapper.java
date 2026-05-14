@@ -21,8 +21,11 @@ public class RestaurantDTORowMapper implements RowMapper<RestaurantDTO> {
         dto.setLatitude(rs.getDouble("latitude"));
         dto.setLongitude(rs.getDouble("longitude"));
 
-        // 거리 계산 아직 안하면 null
-        dto.setDistance(null);
+        try {
+            dto.setDistance(rs.getDouble("distance"));
+        } catch (SQLException e) {
+            dto.setDistance(null);
+        }
 
         return dto;
     }

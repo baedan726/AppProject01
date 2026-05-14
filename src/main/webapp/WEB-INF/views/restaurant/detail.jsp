@@ -235,20 +235,7 @@ a {
 
 <body>
 
-<header class="header">
-	<a href="${contextPath}/" class="logo">
-		픽잇 <span class="logo-icon"></span>
-	</a>
-
-	<nav class="nav">
-		<a href="${contextPath}/">홈</a>
-		<a href="${contextPath}/recommend">추천</a>
-		<a href="${contextPath}/restaurants" class="active">맛집 리스트</a>
-		<a href="${contextPath}/bookmark/list">즐겨찾기</a>
-		<a href="${contextPath}/review">리뷰</a>
-		<a href="${contextPath}/mypage">마이페이지</a>
-	</nav>
-</header>
+	<%@ include file = "/WEB-INF/views/header.jsp" %>
 
 <main class="container">
 
@@ -292,7 +279,7 @@ a {
 				</c:when>
 
 				<c:otherwise>
-					<img src="${contextPath}/resources/images/no-image.png" alt="${restaurant.name}">
+					<img src="${contextPath}/resources/images/category/etc_food.png">
 				</c:otherwise>
 			</c:choose>
 
@@ -340,8 +327,8 @@ a {
 					</a>
 				</c:if>
 
-				<form action="${contextPath}/bookmark/add" method="post" style="margin: 0;">
-
+				<form action="${contextPath}/bookmark/add" method="post" style="margin: 0;" onsubmit="alert('즐겨찾기에 추가되었습니다.');">
+				
 					<input type="hidden" name="restaurantId" value="${restaurant.restaurantId}">
 
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
@@ -397,6 +384,6 @@ a {
 	</c:if>
 
 </main>
-
+	<%@ include file = "/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

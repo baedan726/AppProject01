@@ -320,20 +320,7 @@ a {
 
 <body>
 
-<header class="header">
-    <a href="${contextPath}/" class="logo">
-        픽잇 <span class="logo-icon"></span>
-    </a>
-
-    <nav class="nav">
-        <a href="${contextPath}/">홈</a>
-        <a href="${contextPath}/recommend">추천</a>
-        <a href="${contextPath}/restaurants">맛집 리스트</a>
-        <a href="${contextPath}/bookmark/list">즐겨찾기</a>
-        <a href="${contextPath}/restaurants/map" class="active">지도 보기</a>
-        <a href="${contextPath}/mypage">마이페이지</a>
-    </nav>
-</header>
+<%@ include file = "/WEB-INF/views/header.jsp" %>
 
 <main class="container">
 
@@ -565,6 +552,6 @@ a {
         filterRestaurants();
     }
 </script>
-
+<%@ include file = "/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

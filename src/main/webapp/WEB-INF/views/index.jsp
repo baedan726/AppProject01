@@ -765,42 +765,7 @@ a {
 
 <body>
 
-	<header class="header">
-		<a href="${contextPath}/" class="logo">
-			PickEat <span class="logo-icon"></span>
-		</a>
-
-		<nav class="nav">
-			<a href="${contextPath}/">홈</a>
-			<a href="${contextPath}/recommend">추천</a>
-			<a href="${contextPath}/restaurants">맛집 리스트</a>
-			<a href="${contextPath}/bookmark/list">즐겨찾기</a>
-			<a href="${contextPath}/review">리뷰</a>
-			<a href="${contextPath}/mypage">마이페이지</a>
-		</nav>
-
-		<div class="header-actions">
-			<c:choose>
-				<c:when test="${not empty sessionScope.loginMember}">
-					<span class="user-name">${sessionScope.loginMember.name}님</span>
-
-					<a href="${contextPath}/member/mypage"
-						class="header-btn header-login">마이페이지</a>
-
-					<a href="${contextPath}/member/logout"
-						class="header-btn header-join">로그아웃</a>
-				</c:when>
-
-				<c:otherwise>
-					<a href="${contextPath}/member/login"
-						class="header-btn header-login">로그인</a>
-
-					<a href="${contextPath}/member/signup"
-						class="header-btn header-join">회원가입</a>
-				</c:otherwise>
-			</c:choose>
-		</div>
-	</header>
+	<%@ include file="/WEB-INF/views/header.jsp" %>
 
 	<main class="main">
 
@@ -1030,8 +995,7 @@ a {
 												</c:when>
 
 												<c:otherwise>
-													<img src="${contextPath}/resources/images/no-image.png"
-														alt="${restaurant.name}">
+													<img src="${contextPath}/resources/images/category/etc_food.png">
 												</c:otherwise>
 											</c:choose>
 										</div>
@@ -1062,25 +1026,7 @@ a {
 
 	</main>
 
-	<footer class="footer">
-		<div class="footer-inner">
-			<div>
-				<div class="footer-logo">PickEat</div>
-
-				<div class="footer-text">
-					날씨와 위치, 취향을 바탕으로 맛집을 추천하는 서비스<br>
-					Team Project · Weather Restaurant Recommendation
-				</div>
-			</div>
-
-			<div class="footer-links">
-				<a href="${contextPath}/">홈</a>
-				<a href="${contextPath}/recommend">추천</a>
-				<a href="${contextPath}/restaurants">맛집 리스트</a>
-				<a href="${contextPath}/member/login">로그인</a>
-			</div>
-		</div>
-	</footer>
+	<%@ include file="/WEB-INF/views/footer.jsp" %>
 
 </body>
 </html>

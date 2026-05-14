@@ -13,6 +13,9 @@ public class PageDTO {
     private boolean prev;
     private boolean next;
 
+    public PageDTO() {
+    }
+
     public PageDTO(int page, int size, int totalCount) {
 
         if (page < 1) {
@@ -26,7 +29,8 @@ public class PageDTO {
         this.page = page;
         this.size = size;
         this.totalCount = totalCount;
-
+        
+        //meth.celi : 올림 함수
         this.totalPage = (int) Math.ceil((double) totalCount / size);
 
         if (this.totalPage == 0) {

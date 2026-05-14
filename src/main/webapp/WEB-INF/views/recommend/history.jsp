@@ -252,20 +252,7 @@ body {
 
 <body>
 
-	<header class="header">
-		<a href="${contextPath}/" class="logo"> <span class="logo-text">픽잇</span>
-			<span class="logo-icon"></span>
-		</a>
-
-		<nav class="nav">
-			<a href="${contextPath}/">홈</a> 
-			<a href="${contextPath}/recommend">추천</a>
-			<a href="${contextPath}/restaurants">맛집 리스트</a>
-			<a href="${contextPath}/bookmark/list">즐겨찾기</a> 
-			<a href="${contextPath}/review">리뷰</a> 
-			<a href="${contextPath}/mypage" class="active">마이페이지</a>
-		</nav>
-	</header>
+	<%@ include file = "/WEB-INF/views/header.jsp" %>
 
 	<main class="container">
 
@@ -365,6 +352,6 @@ body {
 		</section>
 
 	</main>
-
+	<%@ include file = "/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

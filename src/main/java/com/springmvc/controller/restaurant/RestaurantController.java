@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.springmvc.dto.restaurant.Restaurant;
 import com.springmvc.dto.restaurant.RestaurantDTO;
 import com.springmvc.dto.restaurant.RestaurantMapDTO;
+import com.springmvc.dto.user.LoginMemberDTO;
 import com.springmvc.service.kakao.KakaoLocalService;
 import com.springmvc.service.restaurant.RestaurantService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RestaurantController {
@@ -32,7 +35,15 @@ public class RestaurantController {
 	        @RequestParam(value = "regionKeyword", required = false) String regionKeyword,
 	        @RequestParam(value = "foodKeyword", required = false) String foodKeyword,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
-	        Model model) {
+	        Model model,
+	        HttpSession session) {
+
+	    LoginMemberDTO loginMember =
+	            (LoginMemberDTO) session.getAttribute("loginMember");
+
+	    if (loginMember == null) {
+	        return "redirect:/member/login";
+	    }
 
 	    int size = 5;
 	    int offset = (page - 1) * size;
@@ -46,12 +57,10 @@ public class RestaurantController {
 
 	    if (hasRegion || hasFood) {
 
-	        // 1차: 사용자가 입력한 조건 그대로 DB 검색
 	        restaurantList = restaurantService.searchRestaurantList(regionKeyword, foodKeyword, offset, size);
 	        totalCount = restaurantService.countSearchRestaurantList(regionKeyword, foodKeyword);
 	        mapList = restaurantService.getSearchRestaurantMapList(regionKeyword, foodKeyword);
 
-	        // 2차: DB에 없으면 카카오 API로 저장
 	        if (restaurantList == null || restaurantList.isEmpty()) {
 
 	            String kakaoQuery = "";
@@ -64,18 +73,12 @@ public class RestaurantController {
 	                if (!kakaoQuery.isEmpty()) {
 	                    kakaoQuery += " ";
 	                }
+
 	                kakaoQuery += foodKeyword.trim();
 	            }
 
 	            kakaoLocalService.importRestaurants(kakaoQuery);
 
-	            /*
-	             * 수정 핵심:
-	             * 카카오에는 "경남대학교 피자"로 검색해서 저장하고,
-	             * DB 재조회는 foodKeyword 기준으로만 한다.
-	             * 이유: 저장된 address에는 "경남대학교"가 없고
-	             * "경남 창원시 마산합포구 ..." 형태라서 region 조건에 걸러짐.
-	             */
 	            if (hasFood) {
 	                restaurantList = restaurantService.searchRestaurantList(null, foodKeyword, offset, size);
 	                totalCount = restaurantService.countSearchRestaurantList(null, foodKeyword);
@@ -119,10 +122,17 @@ public class RestaurantController {
 
     // 맛집 상세 페이지
     @GetMapping("/restaurants/{restaurantId}")
-    public String restaurantDetail(@PathVariable("restaurantId") Long restaurantId, Model model) {
+    public String restaurantDetail(@PathVariable("restaurantId") Long restaurantId, Model model, HttpSession session) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         
-        Long memberId = 1L;
+        LoginMemberDTO loginMember =
+                (LoginMemberDTO) session.getAttribute("loginMember");
+
+        if (loginMember == null) {
+            return "redirect:/member/login";
+        }
+
+        Long memberId = loginMember.getMemberId();
         restaurantService.insertRecentlyRestaurant(memberId, restaurantId);
 
         model.addAttribute("restaurant", restaurant);
@@ -160,10 +170,16 @@ public class RestaurantController {
     }
     
     @GetMapping("/restaurants/recent")
-    public String recentRestaurant(Model model) {
+    public String recentRestaurant(Model model,HttpSession session) {
 
-        Long memberId = 1L; // 임시
+    	LoginMemberDTO loginMember =
+                (LoginMemberDTO) session.getAttribute("loginMember");
 
+        if (loginMember == null) {
+            return "redirect:/member/login";
+        }
+
+        Long memberId = loginMember.getMemberId();
         List<RestaurantDTO> recentList =
             restaurantService.getRecentlyRestaurantList(memberId);
 

@@ -1,4 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
@@ -163,7 +164,6 @@ body {
 	font-weight: 800;
 }
 
-/* 수정: 카카오 카테고리명이 길어도 카드가 깨지지 않게 */
 .category-text {
 	max-width: 260px;
 	overflow: hidden;
@@ -205,8 +205,6 @@ body {
 	font-size: 13px;
 	color: #6b7280;
 	margin-bottom: 6px;
-
-	/* 수정: 지도 오버레이 카테고리 길이 처리 */
 	max-width: 190px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -305,157 +303,149 @@ body {
 	text-align: center;
 	line-height: 1.8;
 }
+
+.dp-flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 </style>
 </head>
 
 <body>
 
-<header class="header">
+	<%@ include file="/WEB-INF/views/header.jsp"%>
+	<%-- jsp:include page="/WEB-INF/views/header.jsp"/>--%>
 
-	<a href="${contextPath}/" class="logo">
-		<span class="logo-text">픽잇</span>
-		<span class="logo-icon"></span>
-	</a>
 
-	<nav class="nav">
-		<a href="${contextPath}/">홈</a>
-		<a href="${contextPath}/recommend">추천</a>
-		<a href="${contextPath}/restaurants" class="active">맛집 리스트</a>
-		<a href="${contextPath}/bookmark/list">즐겨찾기</a>
-		<a href="${contextPath}/review">리뷰</a>
-		<a href="${contextPath}/mypage">마이페이지</a>
-	</nav>
+	<main class="container">
 
-	<form class="search-form" action="${contextPath}/restaurants" method="get">
-		<input class="search-box" type="text" name="regionKeyword"
-			value="${regionKeyword}" placeholder="지역 예: 경남대">
+		<div class="title dp-flex">
+			맛집 리스트 (${totalCount})
+			<form class="search-form" action="${contextPath}/restaurants"
+				method="get">
+				<input class="search-box" type="text" name="regionKeyword"
+					value="${regionKeyword}" placeholder="지역 예: 경남대"> <input
+					class="search-box" type="text" name="foodKeyword"
+					value="${foodKeyword}" placeholder="음식 예: 피자">
 
-		<input class="search-box" type="text" name="foodKeyword"
-			value="${foodKeyword}" placeholder="음식 예: 피자">
+				<button class="search-btn" type="submit">검색</button>
+			</form>
+		</div>
 
-		<button class="search-btn" type="submit">검색</button>
-	</form>
+		<div class="content">
 
-</header>
+			<div class="list">
 
-<main class="container">
+				<c:if test="${empty regionKeyword and empty foodKeyword}">
+					<div class="empty-message">
+						🔍 지역과 음식을 검색해보세요<br> 예: 지역 = 경남대 / 음식 = 피자
+					</div>
+				</c:if>
 
-	<div class="title">맛집 리스트 (${totalCount})</div>
+				<c:forEach var="r" items="${restaurantList}">
+					<div class="card" id="restaurant-${r.restaurantId}"
+						onclick="moveToRestaurant('${r.restaurantId}')">
 
-	<div class="content">
+						<c:choose>
+							<c:when test="${fn:contains(r.categoryName, '한식')}">
+								<img src="${contextPath}/resources/images/category/korean.jpg" />
+							</c:when>
 
-		<div class="list">
+							<c:when
+								test="${fn:contains(r.categoryName, '양식') or fn:contains(r.categoryName, '샐러드')}">
+								<img src="${contextPath}/resources/images/category/western.jpg" />
+							</c:when>
 
-			<c:if test="${empty regionKeyword and empty foodKeyword}">
-				<div class="empty-message">
-					🔍 지역과 음식을 검색해보세요<br>
-					예: 지역 = 경남대 / 음식 = 피자
-				</div>
-			</c:if>
+							<c:when test="${fn:contains(r.categoryName, '중식')}">
+								<img src="${contextPath}/resources/images/category/chinese.jpg" />
+							</c:when>
 
-			<c:forEach var="r" items="${restaurantList}">
-				<div class="card" id="restaurant-${r.restaurantId}"
-					onclick="moveToRestaurant('${r.restaurantId}')">
+							<c:when test="${fn:contains(r.categoryName, '일식')}">
+								<img src="${contextPath}/resources/images/category/japanese.jpg" />
+							</c:when>
 
-					<c:choose>
-						<c:when test="${fn:contains(r.categoryName, '한식')}">
-							<img src="${contextPath}/resources/images/category/korean.jpg" />
-						</c:when>
+							<c:when test="${fn:contains(r.categoryName, '치킨')}">
+								<img src="${contextPath}/resources/images/category/chicken.jpg" />
+							</c:when>
 
-						<c:when test="${fn:contains(r.categoryName, '양식') or fn:contains(r.categoryName, '샐러드')}">
-							<img src="${contextPath}/resources/images/category/western.jpg" />
-						</c:when>
+							<c:when
+								test="${fn:contains(r.categoryName, '카페') or fn:contains(r.categoryName, '디저트') or fn:contains(r.categoryName, '커피')}">
+								<img src="${contextPath}/resources/images/category/cafe.jpg" />
+							</c:when>
 
-						<c:when test="${fn:contains(r.categoryName, '중식')}">
-							<img src="${contextPath}/resources/images/category/chinese.jpg" />
-						</c:when>
+							<c:when test="${fn:contains(r.categoryName, '분식')}">
+								<img
+									src="${contextPath}/resources/images/category/snack_food.jpg" />
+							</c:when>
 
-						<c:when test="${fn:contains(r.categoryName, '일식')}">
-							<img src="${contextPath}/resources/images/category/japanese.jpg" />
-						</c:when>
+							<c:when
+								test="${fn:contains(r.categoryName, '술집') or fn:contains(r.categoryName, '호프') or fn:contains(r.categoryName, '주점') or fn:contains(r.categoryName, '이자카야')}">
+								<img src="${contextPath}/resources/images/category/bar.jpg" />
+							</c:when>
 
-						<c:when test="${fn:contains(r.categoryName, '치킨')}">
-							<img src="${contextPath}/resources/images/category/chicken.jpg" />
-						</c:when>
+							<c:otherwise>
+								<img src="${contextPath}/resources/images/category/etc_food.png">
+							</c:otherwise>
+						</c:choose>
 
-						<c:when test="${fn:contains(r.categoryName, '카페') or fn:contains(r.categoryName, '디저트') or fn:contains(r.categoryName, '커피')}">
-							<img src="${contextPath}/resources/images/category/cafe.jpg" />
-						</c:when>
+						<div class="info">
+							<h3>${r.name}</h3>
 
-						<c:when test="${fn:contains(r.categoryName, '분식')}">
-							<img src="${contextPath}/resources/images/category/snack_food.jpg" />
-						</c:when>
+							<div class="rating">★ ${r.rating}</div>
 
-						<c:when test="${fn:contains(r.categoryName, '술집') or fn:contains(r.categoryName, '호프') or fn:contains(r.categoryName, '주점') or fn:contains(r.categoryName, '이자카야')}">
-							<img src="${contextPath}/resources/images/category/bar.jpg" />
-						</c:when>
+							<div class="category-text" title="${r.categoryName}">
+								${r.categoryName}</div>
 
-						<c:otherwise>
-							<img src="${contextPath}/resources/images/no-image.png" />
-						</c:otherwise>
-					</c:choose>
-
-					<div class="info">
-						<h3>${r.name}</h3>
-						<div class="rating">★ ${r.rating}</div>
-
-						<!-- 수정: 긴 카카오 카테고리명 말줄임 + 마우스 올리면 전체 표시 -->
-						<div class="category-text" title="${r.categoryName}">
-							${r.categoryName}
+							<a class="btn"
+								href="${contextPath}/restaurants/${r.restaurantId}"> 상세보기 </a>
 						</div>
 
-						<a class="btn" href="${contextPath}/restaurants/${r.restaurantId}">
-							상세보기
-						</a>
 					</div>
-
-				</div>
-			</c:forEach>
-
-			<div class="pagination-wrap">
-
-				<c:if test="${startPage > 1}">
-					<a class="page-btn"
-						href="${contextPath}/restaurants?page=${startPage - pageLimit}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
-						‹ 이전
-					</a>
-				</c:if>
-
-				<c:forEach var="i" begin="${startPage}" end="${endPage}">
-					<c:choose>
-						<c:when test="${i == currentPage}">
-							<span class="page-num active">${i}</span>
-						</c:when>
-
-						<c:otherwise>
-							<a class="page-num"
-								href="${contextPath}/restaurants?page=${i}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
-								${i}
-							</a>
-						</c:otherwise>
-					</c:choose>
 				</c:forEach>
 
-				<c:if test="${endPage < totalPage}">
-					<a class="page-btn"
-						href="${contextPath}/restaurants?page=${endPage + 1}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
-						다음 ›
-					</a>
-				</c:if>
+				<div class="pagination-wrap">
+
+					<c:if test="${startPage > 1}">
+						<a class="page-btn"
+							href="${contextPath}/restaurants?page=${startPage - pageLimit}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
+							‹ 이전 </a>
+					</c:if>
+
+					<c:forEach var="i" begin="${startPage}" end="${endPage}">
+						<c:choose>
+							<c:when test="${i == currentPage}">
+								<span class="page-num active"> ${i} </span>
+							</c:when>
+
+							<c:otherwise>
+								<a class="page-num"
+									href="${contextPath}/restaurants?page=${i}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
+									${i} </a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+
+					<c:if test="${endPage < totalPage}">
+						<a class="page-btn"
+							href="${contextPath}/restaurants?page=${endPage + 1}&regionKeyword=${regionKeyword}&foodKeyword=${foodKeyword}">
+							다음 › </a>
+					</c:if>
+
+				</div>
 
 			</div>
 
+			<div id="map" class="map"></div>
+
 		</div>
 
-		<div id="map" class="map"></div>
+	</main>
 
-	</div>
+	<script
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a87f90deda3136d9524a194c121dcf1"></script>
 
-</main>
-
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a87f90deda3136d9524a194c121dcf1"></script>
-
-<script>
+	<script>
 	var mapContainer = document.getElementById('map');
 
 	var mapOption = {
@@ -490,7 +480,6 @@ body {
 	}
 
 	<c:forEach var="r" items="${mapList}" varStatus="status">
-
 		<c:if test="${not empty r.latitude and not empty r.longitude}">
 
 			var markerPosition${status.index} =
@@ -531,7 +520,6 @@ body {
 			overlayContentMap['${r.restaurantId}'] = overlayContent${status.index};
 
 			kakao.maps.event.addListener(marker${status.index}, 'click', function() {
-
 				if (overlay != null) {
 					overlay.setMap(null);
 				}
@@ -548,7 +536,6 @@ body {
 			});
 
 		</c:if>
-
 	</c:forEach>
 
 	<c:if test="${not empty mapList}">
@@ -604,6 +591,6 @@ body {
 		focusRestaurantCard(restaurantId);
 	}
 </script>
-
+<%@ include file = "/WEB-INF/views/footer.jsp" %>
 </body>
 </html>

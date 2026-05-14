@@ -21,52 +21,6 @@ body {
 	color: #111827;
 }
 
-.header {
-	height: 70px;
-	background: #fff;
-	border-bottom: 1px solid #eee;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0 40px;
-}
-
-.logo {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	text-decoration: none;
-}
-
-.logo-text {
-	font-size: 26px;
-	font-weight: 900;
-	color: #111827;
-}
-
-.logo-icon {
-	width: 22px;
-	height: 28px;
-	background: #ff6500;
-	border-radius: 50% 50% 50% 0;
-	transform: rotate(-45deg);
-}
-
-.nav {
-	display: flex;
-	gap: 40px;
-}
-
-.nav a {
-	text-decoration: none;
-	color: #111827;
-	font-weight: 800;
-}
-
-.nav a.active {
-	color: #ff6500;
-}
-
 .container {
 	padding: 40px;
 }
@@ -346,6 +300,37 @@ body {
 	margin-bottom: 10px;
 }
 
+.location-search {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.location-search input {
+	flex: 1;
+	height: 38px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 0 10px;
+	font-size: 13px;
+	font-weight: 700;
+	outline: none;
+}
+
+.location-search input:focus {
+	border-color: #ff6500;
+}
+
+.location-search button {
+	width: 54px;
+	border: none;
+	border-radius: 10px;
+	background: #ff6500;
+	color: white;
+	font-weight: 900;
+	cursor: pointer;
+}
+
 #locationMap {
 	width: 100%;
 	height: 210px;
@@ -359,6 +344,7 @@ body {
 	font-size: 13px;
 	color: #6b7280;
 	font-weight: 700;
+	line-height: 1.5;
 }
 
 .probability-guide {
@@ -373,20 +359,7 @@ body {
 
 <body>
 
-	<header class="header">
-		<a href="${contextPath}/" class="logo"> <span class="logo-text">픽잇</span>
-			<span class="logo-icon"></span>
-		</a>
-
-		<nav class="nav">
-			<a href="${contextPath}/">홈</a>
-			<a href="${contextPath}/recommend" class="active">추천</a> 
-			<a href="${contextPath}/restaurants">맛집 리스트</a>
-			<a href="${contextPath}/bookmark/list">즐겨찾기</a> 
-			<a href="${contextPath}/review">리뷰</a> 
-			<a href="${contextPath}/mypage">마이페이지</a>
-		</nav>
-	</header>
+	<%@ include file="/WEB-INF/views/header.jsp"%>
 
 	<main class="container">
 
@@ -400,7 +373,8 @@ body {
 					<div class="weather-recommend-box">
 						<strong id="weatherRecommendTitle">날씨별 추천 음식</strong>
 						<div id="weatherRecommendChips" class="weather-recommend-chips">
-							날씨 정보를 불러오는 중...</div>
+							날씨 정보를 불러오는 중...
+						</div>
 					</div>
 				</div>
 
@@ -417,8 +391,9 @@ body {
 					등록된 후보 <span id="foodCount">0</span>/10
 				</div>
 
-				<button class="clear-btn" type="button" onclick="clearFoods()">🗑
-					전체 삭제</button>
+				<button class="clear-btn" type="button" onclick="clearFoods()">
+					🗑 전체 삭제
+				</button>
 			</aside>
 
 			<section class="wheel-area">
@@ -433,16 +408,21 @@ body {
 					</div>
 				</div>
 
-				<button class="spin-btn" type="button" onclick="spinWheel()">돌림판
-					돌리기! 🎡</button>
-				<div class="probability-guide">✨ 설정한 조건과 가까운 메뉴일수록 추천 확률이
-					높아져요!</div>
+				<button class="spin-btn" type="button" onclick="spinWheel()">
+					돌림판 돌리기! 🎡
+				</button>
+
+				<div class="probability-guide">
+					✨ 설정한 조건과 가까운 메뉴일수록 추천 확률이 높아져요!
+				</div>
+
 				<div class="result-box">
 					<h2>오늘의 선택은?</h2>
 					<div id="resultFood" class="result-food">아직 없음</div>
 					<p id="resultText">후보를 입력하고 돌림판을 돌려보세요.</p>
-					<a id="resultLink" class="result-btn" href="#"
-						style="display: none;">추천 결과 보기</a>
+					<a id="resultLink" class="result-btn" href="#" style="display: none;">
+						추천 결과 보기
+					</a>
 				</div>
 			</section>
 
@@ -450,11 +430,13 @@ body {
 				<h3>추천 조건 설정</h3>
 
 				<div class="condition-card">
-					<strong>☁ 오늘 날씨</strong> <span id="weatherText">날씨 불러오는 중...</span>
+					<strong>☁ 오늘 날씨</strong>
+					<span id="weatherText">날씨 불러오는 중...</span>
 				</div>
 
 				<div class="condition-card">
-					<strong>👤 상황</strong> <select id="situation">
+					<strong>👤 상황</strong>
+					<select id="situation">
 						<option value="혼밥">혼밥</option>
 						<option value="데이트">데이트</option>
 						<option value="친구">친구</option>
@@ -464,7 +446,8 @@ body {
 				</div>
 
 				<div class="condition-card">
-					<strong>🪙 가격대</strong> <select id="priceRange">
+					<strong>🪙 가격대</strong>
+					<select id="priceRange">
 						<option value="가성비">가성비</option>
 						<option value="보통">보통</option>
 						<option value="고급">고급</option>
@@ -472,7 +455,8 @@ body {
 				</div>
 
 				<div class="condition-card">
-					<strong>🌶 매운맛</strong> <select id="spicyLevel">
+					<strong>🌶 매운맛</strong>
+					<select id="spicyLevel">
 						<option value="안 매움">안 매움</option>
 						<option value="보통">보통</option>
 						<option value="매움">매움</option>
@@ -480,13 +464,23 @@ body {
 				</div>
 
 				<div class="condition-card">
-					<strong>♡ 내 취향 불러오기</strong> <span>저장된 취향으로 빠르게 추천받기</span>
+					<strong>♡ 내 취향 불러오기</strong>
+					<span>저장된 취향으로 빠르게 추천받기</span>
 				</div>
 
 				<div class="map-card">
 					<strong>📍 내 위치</strong>
+
+					<div class="location-search">
+						<input id="locationKeyword" type="text"
+							placeholder="예: 경남대, 창원시청, 마산합포구">
+						<button type="button" onclick="searchLocation()">검색</button>
+					</div>
+
 					<div id="locationMap"></div>
-					<div id="locationText" class="location-text">현재 위치를 불러오는 중...
+
+					<div id="locationText" class="location-text">
+						현재 위치를 불러오는 중...
 					</div>
 				</div>
 			</aside>
@@ -495,8 +489,7 @@ body {
 
 	</main>
 
-	<script
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a87f90deda3136d9524a194c121dcf1"></script>
+	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2a87f90deda3136d9524a194c121dcf1&libraries=services"></script>
 
 	<script>
 let foods = [];
@@ -506,10 +499,87 @@ let currentWeather = "";
 let currentLat = null;
 let currentLng = null;
 
+let map = null;
+let marker = null;
+let ps = null;
+
 const colors = [
     "#ffe8b5", "#ffd4d4", "#e2d5ff", "#ffe7c2", "#d8f3dc",
     "#dbeafe", "#fde68a", "#fecaca", "#bbf7d0", "#bfdbfe"
 ];
+
+function initMap(lat, lng) {
+    currentLat = lat;
+    currentLng = lng;
+
+    const mapContainer = document.getElementById("locationMap");
+    const mapOption = {
+        center: new kakao.maps.LatLng(lat, lng),
+        level: 4
+    };
+
+    map = new kakao.maps.Map(mapContainer, mapOption);
+
+    marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(lat, lng)
+    });
+
+    marker.setMap(map);
+
+    ps = new kakao.maps.services.Places();
+
+    kakao.maps.event.addListener(map, "click", function(mouseEvent) {
+        const clickedLat = mouseEvent.latLng.getLat();
+        const clickedLng = mouseEvent.latLng.getLng();
+
+        currentLat = clickedLat;
+        currentLng = clickedLng;
+
+        marker.setPosition(mouseEvent.latLng);
+        map.setCenter(mouseEvent.latLng);
+
+        document.getElementById("locationText").innerText =
+            "선택한 위치 기준으로 추천을 진행합니다.";
+
+        loadWeather(clickedLat, clickedLng);
+    });
+}
+
+function searchLocation() {
+    const keywordInput = document.getElementById("locationKeyword");
+    const keyword = keywordInput.value.trim();
+
+    if (keyword === "") {
+        alert("검색할 위치를 입력해주세요.");
+        return;
+    }
+
+    if (ps == null) {
+        ps = new kakao.maps.services.Places();
+    }
+
+    ps.keywordSearch(keyword, function(data, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            const lat = data[0].y;
+            const lng = data[0].x;
+
+            const moveLatLng = new kakao.maps.LatLng(lat, lng);
+
+            currentLat = lat;
+            currentLng = lng;
+
+            map.setCenter(moveLatLng);
+            marker.setPosition(moveLatLng);
+
+            document.getElementById("locationText").innerText =
+                keyword + " 기준으로 추천을 진행합니다.";
+
+            loadWeather(lat, lng);
+        } else {
+            alert("검색 결과가 없습니다. 다른 위치명으로 검색해주세요.");
+        }
+    });
+}
 
 function getWeatherKeywords() {
     if (currentWeather.includes("비") || currentWeather.includes("눈") || currentWeather.includes("빗방울")) {
@@ -774,6 +844,11 @@ function spinWheel() {
         return;
     }
 
+    if (currentLat == null || currentLng == null) {
+        alert("위치를 먼저 선택하거나 검색해주세요.");
+        return;
+    }
+
     if (isSpinning) return;
     isSpinning = true;
 
@@ -814,12 +889,12 @@ function spinWheel() {
 
         const link = document.getElementById("resultLink");
         link.href = "${contextPath}/recommend/result?selectedFood=" + encodeURIComponent(selectedFood)
-        + "&lat=" + currentLat
-        + "&lng=" + currentLng
-        + "&weather=" + encodeURIComponent(currentWeather)
-        + "&situation=" + encodeURIComponent(situation)
-        + "&priceRange=" + encodeURIComponent(priceRange)
-        + "&spicyLevel=" + encodeURIComponent(spicyLevel);
+            + "&lat=" + encodeURIComponent(currentLat)
+            + "&lng=" + encodeURIComponent(currentLng)
+            + "&weather=" + encodeURIComponent(currentWeather)
+            + "&situation=" + encodeURIComponent(situation)
+            + "&priceRange=" + encodeURIComponent(priceRange)
+            + "&spicyLevel=" + encodeURIComponent(spicyLevel);
 
         link.style.display = "inline-block";
 
@@ -850,6 +925,12 @@ document.getElementById("foodInput").addEventListener("keydown", function(e) {
     }
 });
 
+document.getElementById("locationKeyword").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        searchLocation();
+    }
+});
+
 renderWheel();
 
 if (navigator.geolocation) {
@@ -857,58 +938,35 @@ if (navigator.geolocation) {
         function(position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            // 현재 위치 받아온 곳에 저장
-            currentLat = lat;
-            currentLng = lng;
 
-            const mapContainer = document.getElementById("locationMap");
-            const mapOption = {
-                center: new kakao.maps.LatLng(lat, lng),
-                level: 4
-            };
-
-            const map = new kakao.maps.Map(mapContainer, mapOption);
-
-            const marker = new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(lat, lng)
-            });
-
-            marker.setMap(map);
-
+            initMap(lat, lng);
             loadWeather(lat, lng);
 
             document.getElementById("locationText").innerText =
-                "현재 위치 기준으로 추천을 진행합니다. 위치가 다르면 지도를 클릭해 바꿔주세요.";
-
-            kakao.maps.event.addListener(map, "click", function(mouseEvent) {
-                const clickedLat = mouseEvent.latLng.getLat();
-                const clickedLng = mouseEvent.latLng.getLng();
-                // 지도 클릭으로 위치 바꿀 때도 저장
-                currentLat = clickedLat;
-                currentLng = clickedLng;
-
-                marker.setPosition(mouseEvent.latLng);
-                map.setCenter(mouseEvent.latLng);
-
-                document.getElementById("locationText").innerText =
-                    "선택한 위치 기준으로 추천을 진행합니다.";
-
-                loadWeather(clickedLat, clickedLng);
-            });
+                "현재 위치 기준으로 추천을 진행합니다. 위치가 다르면 검색하거나 지도를 클릭해 바꿔주세요.";
         },
         function(error) {
             currentWeather = "";
             document.getElementById("weatherText").innerText = "위치 권한이 필요해요";
-            document.getElementById("locationText").innerText = "위치를 허용해주세요 ❗";
+            document.getElementById("locationText").innerText =
+                "위치를 허용하거나 위 검색창에 지역명을 입력해주세요.";
+
             renderWeatherRecommendFoods();
+
+            initMap(35.23625957158495, 128.57829025641476);
         }
     );
 } else {
     currentWeather = "";
     document.getElementById("weatherText").innerText = "위치 기능을 지원하지 않아요";
+    document.getElementById("locationText").innerText =
+        "위 검색창에 지역명을 입력해주세요.";
+
     renderWeatherRecommendFoods();
+
 }
 </script>
 
+	<%@ include file="/WEB-INF/views/footer.jsp"%>
 </body>
 </html>
